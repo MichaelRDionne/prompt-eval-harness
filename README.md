@@ -122,28 +122,4 @@ then a fully compliant run passing it — generated with
 All example content is synthetic. No production data, no real prompts or
 outputs from any deployed system.
 
-## 🪨 in caveman
-
-<p align="center"><img src="assets/caveman.svg" width="120" alt="caveman"></p>
-
-*(for when above too many word)*
-
-ME WRITE PROMPT. PROMPT BOSS ROBOT AROUND. ROBOT TALK SMOOTH.<br>
-SMOOTH NOT MEAN TRUE — ROBOT DROP FACT, MAKE UP FACT, STILL SOUND GOOD. SNEAKY.
-
-THIS TOOL = RULE STICK. RULE SAY:
-
-- MUST HAVE RIGHT WORD
-- MUST NOT HAVE FAKE WORD
-- NOT TOO MANY WORD
-- SHAPE NOT BROKE
-
-ROBOT MISS BIG THING → SCORE LOW → GATE SHUT → NO SHIP.<br>
-ROBOT DO GOOD → SCORE HIGH → GATE OPEN → SHIP.
-
-EYEBALL TIRED, EYEBALL MISS. RULE NEVER TIRED, RULE COUNT SAME EVERY TIME.<br>
-EVERY WEEK ROBOT TAKE TEST ALONE. SCORE GO ON WALL. ME LOOK. GOOD.
-
-🪨 The caveman voice above is borrowed, with thanks, from **[caveman](https://github.com/JuliusBrussee/caveman)** by [Julius Brussee](https://github.com/JuliusBrussee) — a Claude Code skill that makes agents talk like this to cut ~75% of output tokens. Credit to him for the style; go star it.
-
 MIT license.
