@@ -1,5 +1,8 @@
 # prompt-eval-harness
 
+![CI](https://github.com/MichaelRDionne/prompt-eval-harness/actions/workflows/tests.yml/badge.svg)
+![Weekly eval](https://github.com/MichaelRDionne/prompt-eval-harness/actions/workflows/eval.yml/badge.svg)
+
 A small, dependency-free harness for scoring prompts against a rubric of
 deterministic checks — so a prompt edit gets regression-tested like a code
 edit, instead of eyeballed.
@@ -74,6 +77,36 @@ the same defect as running five words over budget (weight 1).
 pip install pytest
 python -m pytest tests/ -v
 ```
+
+## Live scoring + CI gate
+
+`examples/generic_eval.jsonl` is a second, fully domain-neutral suite
+(changelog summarization, JSON extraction, format compliance, prompt-injection
+resistance, precision preservation) that `scripts/run_eval.py` scores on demand:
+
+```bash
+python scripts/run_eval.py
+```
+
+It targets the real model (`claude-haiku-4-5-20251001`, via the `anthropic`
+SDK) when `ANTHROPIC_API_KEY` is set, and otherwise falls back to a
+deterministic mock — no key required to see the gate do something meaningful.
+Every run appends a row to [`benchmarks/results.jsonl`](benchmarks/results.jsonl)
+and regenerates the scorecard below.
+
+<p align="center"><img src="benchmarks/scorecard.svg" alt="Eval scorecard" width="420"></p>
+
+`.github/workflows/tests.yml` runs the test suite (including the eval gate) on
+every push; `.github/workflows/eval.yml` runs the live suite weekly and
+commits the updated results/scorecard back to the repo.
+
+### Demo
+
+![demo](assets/demo.gif)
+
+The recording shows a fluent-but-wrong deterministic run failing the gate,
+then a fully compliant run passing it — generated with
+[VHS](https://github.com/charmbracelet/vhs) from `assets/demo.tape`.
 
 All example content is synthetic. No patient data, no production prompts.
 
