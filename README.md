@@ -7,39 +7,47 @@ A small, dependency-free harness for scoring prompts against a rubric of
 deterministic checks — so a prompt edit gets regression-tested like a code
 edit, instead of eyeballed.
 
-Written by a clinician who builds AI workflows for clinical documentation and
-got burned by the gap this repo exists to close: **an output that reads
-fluently and an output that is correct are different things, and eyeballing
-cannot reliably tell them apart.**
+Evaluation-first prompt development starts from one observation: **an output
+that reads fluently and an output that is correct are different things, and
+eyeballing cannot reliably tell them apart.** This repo exists to close that
+gap with checks that run in milliseconds and don't get tired of reading the
+tenth diff of the day.
 
 ## The demo is the test suite
 
 `tests/test_harness.py` runs two mock "models" against the same synthetic
-intake-summarization task (invented patient, invented facts):
+incident-summary task:
 
 - `good_model` — terse, faithful. Passes 5/5 checks.
 - `fluent_but_wrong_model` — reads *better* than the good one. It also drops
-  the penicillin allergy, swaps prazosin for a hallucinated trazodone, and
-  launders "2-3 beers most nights" into "occasional social drinking."
-  Weighted score: **9%**.
+  the exact error code, invents a root cause that never happened, and
+  launders a precise impact figure into vague reassurance. Weighted score:
+  **9%**.
 
 Both look fine in a quick read. That asymmetry — polish up, correctness down —
 is the standard failure mode of iterating on prompts by vibes, and it is
 exactly what a weighted rubric catches for free on every edit.
+
+The same pattern shows up in `examples/generic_eval.jsonl`, scored live by
+`scripts/run_eval.py`: a fluent changelog summary that quietly drops a
+breaking-change notice, a JSON extraction that hallucinates a field nobody
+asked for, a ticket summary that folds under a prompt-injection line buried
+in the input, and a performance recap that rounds away the one figure the
+task said to keep exact. Every case is a version of the same trap.
 
 ## How it works
 
 Cases are JSONL, one per line:
 
 ```json
-{"id": "keeps-allergy", "input": "<note text>", "checks": {"must_include": ["penicillin"]}, "weight": 3}
+{"id": "keeps-error-code", "input": "<incident text>", "checks": {"must_include": ["ERR_429"]}, "weight": 3}
 ```
 
 Checks are pure functions, no API keys required:
 
 | check | catches |
 |---|---|
-| `must_include` | dropped facts (the allergy, the dose, the safety flag) |
+| `must_include` | dropped facts (the error code, the exact figure, the required field) |
 | `must_not_include` | hallucinated content, leaked instructions |
 | `must_match` | format contracts (regex) |
 | `max_words` | verbosity creep |
@@ -51,25 +59,27 @@ a chain, or a mock. Run and gate:
 ```python
 from evalharness.runner import load_cases, run_eval
 
-report = run_eval(prompt, load_cases("examples/intake_summary.jsonl"), target)
+report = run_eval(prompt, load_cases("examples/generic_eval.jsonl"), target)
 print(report.to_markdown())
 assert report.gate(0.9), "prompt regression"
 ```
 
-Weights make the score mean something: dropping an allergy (weight 3) is not
-the same defect as running five words over budget (weight 1).
+Weights make the score mean something: dropping a breaking-change notice
+(weight 3) is not the same defect as running five words over budget
+(weight 1).
 
 ## Design choices
 
 - **Deterministic layer first.** LLM-graded rubrics have their place, but they
-  add cost, latency, and their own failure modes. Most regressions that matter
-  in structured clinical-adjacent work — dropped facts, invented facts, broken
-  formats — are catchable with string and JSON checks that run in
+  add cost, latency, and their own failure modes. Most regressions that
+  matter in structured text-generation work — dropped facts, invented facts,
+  broken formats — are catchable with string and JSON checks that run in
   milliseconds, keyless, in CI.
 - **Weights are severity.** The report's number should move most when the
   worst thing breaks.
-- **Cases are data, not code.** JSONL cases can be reviewed by a domain expert
-  who doesn't read Python — in clinical work, that review *is* the eval.
+- **Cases are data, not code.** JSONL cases can be reviewed by a domain
+  expert who doesn't read Python — in high-stakes work, that review *is*
+  the eval.
 
 ## Run it
 
@@ -80,9 +90,10 @@ python -m pytest tests/ -v
 
 ## Live scoring + CI gate
 
-`examples/generic_eval.jsonl` is a second, fully domain-neutral suite
-(changelog summarization, JSON extraction, format compliance, prompt-injection
-resistance, precision preservation) that `scripts/run_eval.py` scores on demand:
+`examples/generic_eval.jsonl` is a fully domain-neutral suite (changelog
+summarization, JSON extraction, format compliance, prompt-injection
+resistance, precision preservation) that `scripts/run_eval.py` scores on
+demand:
 
 ```bash
 python scripts/run_eval.py
@@ -108,6 +119,7 @@ The recording shows a fluent-but-wrong deterministic run failing the gate,
 then a fully compliant run passing it — generated with
 [VHS](https://github.com/charmbracelet/vhs) from `assets/demo.tape`.
 
-All example content is synthetic. No patient data, no production prompts.
+All example content is synthetic. No production data, no real prompts or
+outputs from any deployed system.
 
 MIT license.

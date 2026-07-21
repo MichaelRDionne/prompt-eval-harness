@@ -20,7 +20,7 @@ class CheckResult:
 
 def must_include(output: str, terms: list[str], case_sensitive: bool = False) -> CheckResult:
     """Every term must appear. The workhorse check: did the output keep the
-    facts that matter (the allergy, the dose, the safety flag)?"""
+    facts that matter (the error code, the exact figure, the required field)?"""
     haystack = output if case_sensitive else output.lower()
     missing = [t for t in terms if (t if case_sensitive else t.lower()) not in haystack]
     return CheckResult(
@@ -84,7 +84,7 @@ def run_checks(output: str, spec: dict) -> list[CheckResult]:
     """Run every check named in a case's `checks` spec against an output.
 
     Spec format (one key per check, value = that check's argument):
-        {"must_include": ["penicillin"], "max_words": 120}
+        {"must_include": ["ERR_429"], "max_words": 120}
     """
     results = []
     for name, arg in spec.items():
