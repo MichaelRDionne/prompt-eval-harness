@@ -105,6 +105,11 @@ deterministic mock — no key required to see the gate do something meaningful.
 Every run appends a row to [`benchmarks/results.jsonl`](benchmarks/results.jsonl)
 and regenerates the scorecard below.
 
+**Live dashboard:** the weekly results are published, untouched, at
+[michaelrdionne.github.io/prompt-eval-harness](https://michaelrdionne.github.io/prompt-eval-harness/)
+— rendered by [`scripts/render_dashboard.py`](scripts/render_dashboard.py) after
+each run and committed by the same workflow.
+
 <p align="center"><img src="benchmarks/scorecard.svg" alt="Eval scorecard" width="420"></p>
 
 `.github/workflows/tests.yml` runs the test suite (including the eval gate) on

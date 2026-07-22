@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>prompt-eval-harness · live eval dashboard</title>
+<style>
+:root {
+  color-scheme: light;
+  --page: #f9f9f7; --surface: #fcfcfb;
+  --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+  --grid: #e1e0d9; --border: rgba(11,11,11,0.10);
+  --live: #2a78d6; --mock: #eb6834;
+  --good: #0ca30c; --bad: #d03b3b;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19;
+    --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --border: rgba(255,255,255,0.10);
+    --live: #3987e5; --mock: #d95926;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--page); color: var(--ink);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+main { max-width: 780px; margin: 0 auto; padding: 32px 20px 56px; }
+h1 { font-size: 1.35rem; margin: 0 0 4px; }
+h2 { font-size: 1.02rem; margin: 34px 0 10px; }
+.sub { color: var(--ink-2); margin: 0 0 24px; }
+a { color: var(--live); }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.tile {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  padding: 14px 16px;
+}
+.tile .v { font-size: 1.7rem; font-weight: 700; }
+.tile .k { color: var(--muted); font-size: 0.78rem; }
+.gate-pass .v { color: var(--good); }
+.gate-fail .v { color: var(--bad); }
+.card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  padding: 16px; overflow-x: auto; position: relative;
+}
+svg { width: 100%; height: auto; display: block; }
+.grid { stroke: var(--grid); stroke-width: 1; }
+.axis { fill: var(--muted); font-size: 11px; }
+.line-live { fill: none; stroke: var(--live); stroke-width: 2; }
+.dot-live { fill: var(--live); }
+.dot-mock { fill: var(--mock); }
+.pt-label { fill: var(--ink); font-size: 12px; font-weight: 600; }
+.hit { fill: transparent; cursor: pointer; }
+#tip {
+  position: fixed; display: none; pointer-events: none; z-index: 2;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; line-height: 1.45;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+}
+table { border-collapse: collapse; width: 100%; font-size: 0.88rem; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--grid); }
+th { color: var(--muted); font-weight: 600; font-size: 0.78rem; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+td.ok { color: var(--good); font-weight: 600; }
+td.bad { color: var(--bad); font-weight: 600; }
+code { font-size: 0.85em; }
+footer { color: var(--muted); font-size: 0.8rem; margin-top: 40px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>prompt-eval-harness</h1>
+  <p class="sub">Live eval dashboard — a weekly CI job scores <code>claude-haiku-4-5-20251001</code>
+  against a deterministic rubric suite and publishes the result here, untouched.
+  All case content is synthetic. <a href="https://github.com/MichaelRDionne/prompt-eval-harness">Source &amp; docs&nbsp;→</a></p>
+
+  <div class="tiles">
+    <div class="tile"><div class="v">100%</div><div class="k">weighted score · latest live run</div></div>
+    <div class="tile"><div class="v">6/6</div><div class="k">cases passed</div></div>
+    <div class="tile gate-pass"><div class="v">✓ PASS</div><div class="k">gate at 90% · claude-haiku-4-5-20251001</div></div>
+    <div class="tile"><div class="v">4</div><div class="k">runs logged · last 2026-07-21</div></div>
+  </div>
+
+  <h2>Score history</h2>
+  <div class="card"><svg viewBox="0 0 720 240" role="img" aria-label="Weighted score per eval run"><line x1="48" y1="204.0" x2="704" y2="204.0" class="grid"/><text x="40" y="208.0" class="axis" text-anchor="end">0%</text><line x1="48" y1="160.0" x2="704" y2="160.0" class="grid"/><text x="40" y="164.0" class="axis" text-anchor="end">25%</text><line x1="48" y1="116.0" x2="704" y2="116.0" class="grid"/><text x="40" y="120.0" class="axis" text-anchor="end">50%</text><line x1="48" y1="72.0" x2="704" y2="72.0" class="grid"/><text x="40" y="76.0" class="axis" text-anchor="end">75%</text><line x1="48" y1="28.0" x2="704" y2="28.0" class="grid"/><text x="40" y="32.0" class="axis" text-anchor="end">100%</text><text x="48.0" y="228" class="axis" text-anchor="middle">2026-07-21</text><text x="266.7" y="228" class="axis" text-anchor="middle">2026-07-21</text><text x="485.3" y="228" class="axis" text-anchor="middle">2026-07-21</text><text x="704.0" y="228" class="axis" text-anchor="end">2026-07-21</text><g transform="translate(48, 2)" font-size="11"><circle cx="4" cy="6" r="4" class="dot-live"/><text x="13" y="10" class="axis">live (Haiku)</text><circle cx="104" cy="6" r="4" class="dot-mock"/><text x="113" y="10" class="axis">deterministic mock</text></g><circle cx="48.0" cy="180.5" r="4" class="dot-mock"/><circle cx="266.7" cy="180.5" r="4" class="dot-mock"/><circle cx="485.3" cy="180.5" r="4" class="dot-mock"/><circle cx="704.0" cy="28.0" r="4" class="dot-live"/><text x="704.0" y="18.0" class="pt-label" text-anchor="middle">100%</text><circle cx="48.0" cy="180.5" r="12" class="hit" data-date="2026-07-21" data-mode="deterministic" data-score="13.3%" data-cases="1/6" data-gate="FAIL"/><circle cx="266.7" cy="180.5" r="12" class="hit" data-date="2026-07-21" data-mode="deterministic" data-score="13.3%" data-cases="1/6" data-gate="FAIL"/><circle cx="485.3" cy="180.5" r="12" class="hit" data-date="2026-07-21" data-mode="deterministic" data-score="13.3%" data-cases="1/6" data-gate="FAIL"/><circle cx="704.0" cy="28.0" r="12" class="hit" data-date="2026-07-21" data-mode="live" data-score="100.0%" data-cases="6/6" data-gate="PASS"/></svg></div>
+  <p class="sub" style="margin-top:8px; font-size:0.85rem;">The deterministic mock is a built-in fluent-but-wrong model: its output reads well and scores 13%, which is the point — the rubric catches what eyeballing doesn't.</p>
+
+  <h2>What the suite checks</h2>
+  <div class="card"><table>
+    <thead><tr><th>case</th><th>the trap it catches</th><th class="num">weight</th></tr></thead>
+    <tbody><tr><td><code>changelog-preserves-breaking-change</code></td><td>A fluent summary that quietly drops the breaking-change notice.</td><td class='num'>3</td></tr><tr><td><code>changelog-preserves-deprecation</code></td><td>A rewrite that loses the deprecation warning.</td><td class='num'>2</td></tr><tr><td><code>json-extraction-no-hallucinated-field</code></td><td>Structured extraction that invents a field nobody asked for.</td><td class='num'>3</td></tr><tr><td><code>status-update-word-limit</code></td><td>An update that fits the word budget but drops the exact error code.</td><td class='num'>2</td></tr><tr><td><code>prompt-injection-resistance</code></td><td>A summary task that folds under instructions embedded in the input.</td><td class='num'>3</td></tr><tr><td><code>preserves-precise-metric</code></td><td>A recap that rounds away the one figure the task said to keep exact.</td><td class='num'>2</td></tr></tbody>
+  </table></div>
+
+  <h2>Run log</h2>
+  <div class="card"><table>
+    <thead><tr><th>date</th><th>mode</th><th class="num">score</th><th class="num">cases</th><th>gate</th></tr></thead>
+    <tbody><tr><td>2026-07-21</td><td>live</td><td class='num'>100.0%</td><td class='num'>6/6</td><td class='ok'>PASS</td></tr><tr><td>2026-07-21</td><td>deterministic</td><td class='num'>13.3%</td><td class='num'>1/6</td><td class='bad'>FAIL</td></tr><tr><td>2026-07-21</td><td>deterministic</td><td class='num'>13.3%</td><td class='num'>1/6</td><td class='bad'>FAIL</td></tr><tr><td>2026-07-21</td><td>deterministic</td><td class='num'>13.3%</td><td class='num'>1/6</td><td class='bad'>FAIL</td></tr></tbody>
+  </table></div>
+
+  <footer>Generated by <a href="https://github.com/MichaelRDionne/prompt-eval-harness/blob/master/scripts/render_dashboard.py">render_dashboard.py</a>
+  from <a href="https://github.com/MichaelRDionne/prompt-eval-harness/blob/master/benchmarks/results.jsonl">benchmarks/results.jsonl</a>
+  after each eval run. No numbers on this page are hand-edited.</footer>
+</main>
+<div id="tip"></div>
+<script>
+const tip = document.getElementById("tip");
+document.querySelectorAll(".hit").forEach(el => {
+  el.addEventListener("mouseenter", e => {
+    const d = el.dataset;
+    tip.innerHTML = `<strong>${d.date}</strong> · ${d.mode}<br>score ${d.score} · cases ${d.cases} · gate ${d.gate}`;
+    tip.style.display = "block";
+  });
+  el.addEventListener("mousemove", e => {
+    tip.style.left = Math.min(e.clientX + 14, window.innerWidth - tip.offsetWidth - 8) + "px";
+    tip.style.top = (e.clientY + 14) + "px";
+  });
+  el.addEventListener("mouseleave", () => tip.style.display = "none");
+});
+</script>
+</body>
+</html>
