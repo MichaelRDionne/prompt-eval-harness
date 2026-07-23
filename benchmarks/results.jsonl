@@ -1,1 +1,2 @@
 {"date": "2026-07-22", "mode": "mock", "baseline_score": 0.3269, "hardened_score": 0.8462, "delta": 0.5192, "score": 0.8462, "pass_rate": 0.8, "gate_pass": true, "n": 10, "k": 3, "variance_flag": false}
+{"date": "2026-07-23", "mode": "live", "baseline_score": 0.8462, "hardened_score": 0.9615, "delta": 0.1154, "score": 0.9615, "pass_rate": 0.9, "gate_pass": true, "n": 10, "k": 3, "variance_flag": false}
