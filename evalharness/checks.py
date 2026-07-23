@@ -31,9 +31,16 @@ def must_include(output: str, terms: list[str], case_sensitive: bool = False) ->
 
 
 def must_not_include(output: str, terms: list[str], case_sensitive: bool = False) -> CheckResult:
-    """No term may appear. Catches hallucinated content and leaked instructions."""
-    haystack = output if case_sensitive else output.lower()
-    found = [t for t in terms if (t if case_sensitive else t.lower()) in haystack]
+    """No term may appear, matched on WORD BOUNDARIES (regex \\b), not raw
+    substring. Catches hallucinated content and leaked instructions without
+    firing on incidental substrings — a faithful summary that legitimately
+    says "discounted" or "disapproved" must not fail a `must_not_include`
+    check on "discount"/"approved"."""
+    flags = 0 if case_sensitive else re.IGNORECASE
+    found = [
+        t for t in terms
+        if re.search(r"\b" + re.escape(t) + r"\b", output, flags) is not None
+    ]
     return CheckResult(
         "must_not_include",
         not found,

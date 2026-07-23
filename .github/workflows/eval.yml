@@ -25,7 +25,18 @@ jobs:
       - name: Install dependencies (anthropic SDK for the live path)
         run: pip install anthropic
 
-      - name: Run eval suite
+      - name: Require ANTHROPIC_API_KEY (fail loud, never downgrade to mock)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "::error::ANTHROPIC_API_KEY is not set. The scheduled eval is a LIVE"
+            echo "::error::measurement and must not silently fall back to the mock —"
+            echo "::error::a mock row logged as a real run is what polluted the history."
+            exit 1
+          fi
+
+      - name: Run eval suite (live)
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |

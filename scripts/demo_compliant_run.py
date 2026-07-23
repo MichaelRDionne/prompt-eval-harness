@@ -21,4 +21,4 @@ if __name__ == "__main__":
     report = run_eval("system prompt", load_cases(CASES_PATH), compliant_target)
     print(report.to_markdown())
     print()
-    print(f"Gate(0.9): {'PASS' if report.gate(0.9) else 'FAIL'}")
+    print(f"Gate(0.75): {'PASS' if report.gate(0.75) else 'FAIL'}")

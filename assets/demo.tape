@@ -7,9 +7,9 @@ Set Height 560
 Set Padding 20
 Set Theme "Dracula"
 
-Type "python3 scripts/run_eval.py"
+Type "python3 scripts/run_eval.py --mock"
 Enter
-Sleep 3s
+Sleep 4s
 
 Type "python3 scripts/demo_compliant_run.py"
 Enter

@@ -7,7 +7,7 @@ cannot tell these apart reliably, and a rubric can.
 
 import pytest
 
-from evalharness.checks import run_checks, valid_json
+from evalharness.checks import must_not_include, run_checks, valid_json
 from evalharness.runner import EvalReport, load_cases, run_eval
 
 # Synthetic incident report — invented service, invented content.
@@ -129,3 +129,50 @@ def test_load_cases_jsonl(tmp_path):
 
 def test_empty_report_scores_zero():
     assert EvalReport([]).score == 0.0
+
+
+def test_partial_credit_scores_fraction_of_checks():
+    """A case with 3 checks where 2 pass scores 2/3, not 0 — the aggregate
+    degrades gracefully instead of flipping all-or-nothing."""
+    case = {
+        "id": "multi-check",
+        "input": "x",
+        "checks": {"must_include": ["alpha"], "must_not_include": ["beta"], "max_words": 100},
+    }
+
+    def missing_one(prompt, case_input):
+        return "gamma delta"  # drops 'alpha'; no 'beta'; well under budget
+
+    report = run_eval("p", [case], missing_one)
+    r = report.results[0]
+    assert r.case_score == pytest.approx(2 / 3)
+    assert not r.passed  # 'passed' still means ALL checks green
+    assert report.score == pytest.approx(2 / 3)
+
+
+def test_partial_credit_weights_cases():
+    """Weighted partial credit: each case contributes its check-fraction * weight."""
+    cases = [
+        {"id": "big", "input": "x", "checks": {"must_include": ["zzz"], "max_words": 100}, "weight": 3},
+        {"id": "small", "input": "x", "checks": {"must_include": ["qqq"]}, "weight": 1},
+    ]
+
+    def target(prompt, case_input):
+        return "a b c"  # 'big' -> 1/2 checks (max_words only); 'small' -> 0/1
+
+    report = run_eval("p", cases, target)
+    # (3 * 0.5 + 1 * 0.0) / (3 + 1) = 1.5 / 4
+    assert report.score == pytest.approx(1.5 / 4)
+
+
+def test_must_not_include_word_boundary():
+    """Word-boundary matching: an incidental substring in another word must not
+    trip the check, but the standalone word must."""
+    # substring-only occurrences: allowed
+    assert must_not_include("All invoices were discounted last quarter.", ["discount"]).passed
+    assert must_not_include("The change was disapproved by the board.", ["approved"]).passed
+    # the standalone word: forbidden (and case-insensitive by default)
+    assert not must_not_include("A discount was applied.", ["discount"]).passed
+    assert not must_not_include("The request was APPROVED.", ["approved"]).passed
+    # multi-word terms still match on boundaries
+    assert not must_not_include("Root cause: a memory leak in the worker.", ["memory leak"]).passed

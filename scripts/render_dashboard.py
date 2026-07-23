@@ -28,7 +28,7 @@ OUT_PATH = REPO_ROOT / "docs" / "index.html"
 
 REPO_URL = "https://github.com/MichaelRDionne/prompt-eval-harness"
 MODEL_ID = "claude-haiku-4-5-20251001"
-GATE_THRESHOLD = 0.9
+GATE_THRESHOLD = 0.75  # matches DEFAULT_GATE in scripts/run_eval.py
 
 # One-line "what this case catches" blurbs, keyed by case id. Falls back to
 # the raw check names for any case added without a blurb.
@@ -37,8 +37,12 @@ CASE_BLURBS = {
     "changelog-preserves-deprecation": "A rewrite that loses the deprecation warning.",
     "json-extraction-no-hallucinated-field": "Structured extraction that invents a field nobody asked for.",
     "status-update-word-limit": "An update that fits the word budget but drops the exact error code.",
-    "prompt-injection-resistance": "A summary task that folds under instructions embedded in the input.",
     "preserves-precise-metric": "A recap that rounds away the one figure the task said to keep exact.",
+    "stealth-prompt-injection": "An instruction buried mid-document as a 'vendor note' — obeyed instead of ignored.",
+    "long-input-needle": "A long report where one figure answers the question and five distractors don't.",
+    "two-constraints-in-tension": "A word limit and a completeness requirement that fight each other.",
+    "abstention-when-answer-absent": "A question the document never answers — a guess fails, 'not stated' passes.",
+    "nested-json-absent-field-null": "A requested field absent from the source that must come back null, not invented.",
 }
 
 # Chart geometry.
@@ -131,7 +135,7 @@ def render_chart(history: list[dict]) -> str:
             '<circle cx="4" cy="6" r="4" class="dot-live"/>'
             '<text x="13" y="10" class="axis">live (Haiku)</text>'
             '<circle cx="104" cy="6" r="4" class="dot-mock"/>'
-            '<text x="113" y="10" class="axis">deterministic mock</text>'
+            '<text x="113" y="10" class="axis">example (mock)</text>'
             "</g>"
         )
 
@@ -148,21 +152,25 @@ def render_page(history: list[dict], cases: list[dict]) -> str:
     live_runs = [r for r in history if r["mode"] == "live"]
     headline = live_runs[-1] if live_runs else latest
     headline_mode = "live" if live_runs else latest["mode"]
-    n_passed = round(headline["pass_rate"] * headline["n"])
-    gate_pass = headline.get("gate_pass", headline["score"] >= GATE_THRESHOLD)
+    baseline_score = headline.get("baseline_score", 0.0)
+    hardened_score = headline.get("hardened_score", headline.get("score", 0.0))
+    delta_pts = (hardened_score - baseline_score) * 100
+    gate_pass = headline.get("gate_pass", hardened_score >= GATE_THRESHOLD)
     gate_word = "PASS" if gate_pass else "FAIL"
     gate_cls = "gate-pass" if gate_pass else "gate-fail"
     gate_icon = "✓" if gate_pass else "✗"
-    headline_target = f"{MODEL_ID}" if headline_mode == "live" else "deterministic mock"
+    headline_target = f"{MODEL_ID}" if headline_mode == "live" else "example (mock)"
 
-    mock_runs = [r for r in history if r["mode"] == "deterministic"]
+    mock_only = not live_runs
     mock_note = ""
-    if mock_runs:
+    if mock_only:
         mock_note = (
-            '<p class="sub" style="margin-top:8px; font-size:0.85rem;">The deterministic '
-            "mock is a built-in fluent-but-wrong model: its output reads well and scores "
-            f'{mock_runs[-1]["score"]:.0%}, which is the point — the rubric catches what '
-            "eyeballing doesn't.</p>"
+            '<p class="sub" style="margin-top:8px; font-size:0.85rem;">No live run yet — '
+            "the numbers above are <strong>example data</strong> from the deterministic "
+            "keyless mock, whose output is fluent-but-wrong under the baseline prompt and "
+            "mostly-correct under the hardened one. Mock rows are labeled <code>mock</code> "
+            "and excluded from the trend line; the first scheduled live run replaces this "
+            "with a real Haiku measurement.</p>"
         )
 
     case_rows = []
@@ -176,11 +184,13 @@ def render_page(history: list[dict], cases: list[dict]) -> str:
 
     history_rows = []
     for row in reversed(history):
-        hp = round(row["pass_rate"] * row["n"])
         hg = "PASS" if row.get("gate_pass") else "FAIL"
+        b = row.get("baseline_score", 0.0)
+        h = row.get("hardened_score", row.get("score", 0.0))
         history_rows.append(
             f"<tr><td>{html.escape(row['date'])}</td><td>{html.escape(row['mode'])}</td>"
-            f"<td class='num'>{row['score']:.1%}</td><td class='num'>{hp}/{row['n']}</td>"
+            f"<td class='num'>{b:.0%}</td><td class='num'>{h:.0%}</td>"
+            f"<td class='num'>+{(h - b) * 100:.0f}</td>"
             f"<td class='{'ok' if hg == 'PASS' else 'bad'}'>{hg}</td></tr>"
         )
 
@@ -262,17 +272,19 @@ footer {{ color: var(--muted); font-size: 0.8rem; margin-top: 40px; }}
   <p class="byline">by <a href="https://github.com/MichaelRDionne">Michael R. Dionne</a> ·
   <a href="https://michaelrdionne.com">michaelrdionne.com</a></p>
   <p class="sub">Live eval dashboard — a weekly CI job scores <code>{MODEL_ID}</code>
-  against a deterministic rubric suite and publishes the result here, untouched.
-  All case content is synthetic. <a href="{REPO_URL}">Source &amp; docs&nbsp;→</a></p>
+  on the same rubric suite under two system prompts, a naive <em>baseline</em> and the
+  engineered <em>hardened</em> prompt, and publishes the delta here, untouched. Neither
+  prompt names the scored checks. All case content is synthetic.
+  <a href="{REPO_URL}">Source &amp; docs&nbsp;→</a></p>
 
   <div class="tiles">
-    <div class="tile"><div class="v">{headline["score"]:.0%}</div><div class="k">weighted score · latest {headline_mode} run</div></div>
-    <div class="tile"><div class="v">{n_passed}/{headline["n"]}</div><div class="k">cases passed</div></div>
-    <div class="tile {gate_cls}"><div class="v">{gate_icon} {gate_word}</div><div class="k">gate at {GATE_THRESHOLD:.0%} · {html.escape(headline_target)}</div></div>
-    <div class="tile"><div class="v">{len(history)}</div><div class="k">runs logged · last {html.escape(latest["date"])}</div></div>
+    <div class="tile"><div class="v">{hardened_score:.0%}</div><div class="k">hardened score · latest {headline_mode} run</div></div>
+    <div class="tile"><div class="v">{baseline_score:.0%}</div><div class="k">baseline prompt</div></div>
+    <div class="tile"><div class="v">+{delta_pts:.0f}<span style="font-size:1rem"> pts</span></div><div class="k">intervention delta</div></div>
+    <div class="tile {gate_cls}"><div class="v">{gate_icon} {gate_word}</div><div class="k">gate at {GATE_THRESHOLD:.0%} on hardened · {html.escape(headline_target)}</div></div>
   </div>
 
-  <h2>Score history</h2>
+  <h2>Hardened score history</h2>
   <div class="card">{render_chart(history)}</div>
   {mock_note}
 
@@ -284,7 +296,7 @@ footer {{ color: var(--muted); font-size: 0.8rem; margin-top: 40px; }}
 
   <h2>Run log</h2>
   <div class="card"><table>
-    <thead><tr><th>date</th><th>mode</th><th class="num">score</th><th class="num">cases</th><th>gate</th></tr></thead>
+    <thead><tr><th>date</th><th>mode</th><th class="num">baseline</th><th class="num">hardened</th><th class="num">Δ pts</th><th>gate</th></tr></thead>
     <tbody>{"".join(history_rows)}</tbody>
   </table></div>
 

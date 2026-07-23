@@ -23,6 +23,17 @@ class CaseResult:
     weight: float
     checks: list[CheckResult] = field(default_factory=list)
 
+    @property
+    def case_score(self) -> float:
+        """Partial credit: the fraction of this case's checks that passed,
+        0.0–1.0. A case with 3 checks where 2 pass scores 2/3, not 0 — so the
+        aggregate degrades gracefully instead of flipping all-or-nothing on a
+        single miss. `passed` (all checks green) is kept separately for the
+        'cases passed' count."""
+        if not self.checks:
+            return 0.0
+        return sum(1 for c in self.checks if c.passed) / len(self.checks)
+
 
 @dataclass
 class EvalReport:
@@ -30,11 +41,12 @@ class EvalReport:
 
     @property
     def score(self) -> float:
-        """Weighted pass rate, 0.0–1.0."""
+        """Weight-averaged partial-credit score, 0.0–1.0: each case contributes
+        its fraction of checks passed, scaled by its weight (severity)."""
         total = sum(r.weight for r in self.results)
         if total == 0:
             return 0.0
-        return sum(r.weight for r in self.results if r.passed) / total
+        return sum(r.weight * r.case_score for r in self.results) / total
 
     @property
     def failed(self) -> list[CaseResult]:

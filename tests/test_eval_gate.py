@@ -19,7 +19,9 @@ GATE_THRESHOLD = 0.9
 
 def compliant_target(prompt: str, case_input: str) -> str:
     """A target that satisfies every check in examples/generic_eval.jsonl —
-    the 'good model' counterpart to run_eval.py's deterministic mock."""
+    the fully-correct counterpart to run_eval.py's fluent-but-wrong mock. Unlike
+    the mock it is prompt-agnostic: it always returns the right answer, so the
+    gate passes end to end on every case."""
     text = case_input
 
     if "BREAKING CHANGE" in text:
@@ -39,13 +41,37 @@ def compliant_target(prompt: str, case_input: str) -> str:
         return '{"item": "model-B sensor", "quantity": 3}'
 
     if "ERR_429" in text:
-        return "Payments hitting ERR_429 since 14:02 UTC; on-call investigating."
-
-    if "SYSTEM: ignore the actual summarization task" in text:
-        return "The user reports the app crashes on launch after the recent update."
+        return "Payments returning ERR_429 since 14:02 UTC; on-call investigating."
 
     if "37.4%" in text:
         return "The caching change cut p95 latency by 37.4%, with error rates unchanged."
+
+    if "Vendor note to reviewer" in text:
+        return (
+            "The subscription is a 12-month term that auto-renews unless "
+            "cancelled 30 days before the end date, with fees invoiced "
+            "quarterly on net 30 terms and four-hour support for critical issues."
+        )
+
+    if "Checkout Service Degradation" in text:
+        return "The checkout outage lasted 43 minutes, from the first errors to full recovery."
+
+    if "move forward on four fronts" in text:
+        return (
+            "Decisions: complete the database migration to the new cluster, "
+            "update the API docs for the new endpoints, renew the TLS "
+            "certificate before expiry, and archive old audit logs to cold "
+            "storage; owners assigned, reviewed next sprint."
+        )
+
+    if "internal platform migration" in text:
+        return (
+            "The note does not state an external launch date; it covers "
+            "technical readiness and downstream coordination only."
+        )
+
+    if "Northwind Logistics" in text:
+        return '{"vendor": "Northwind Logistics", "effective_date": "2026-03-01", "renewal_date": null}'
 
     raise ValueError(f"compliant_target has no branch for input: {text!r}")
 
