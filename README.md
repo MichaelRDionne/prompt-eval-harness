@@ -3,15 +3,11 @@
 ![CI](https://github.com/MichaelRDionne/prompt-eval-harness/actions/workflows/tests.yml/badge.svg)
 ![Weekly eval](https://github.com/MichaelRDionne/prompt-eval-harness/actions/workflows/eval.yml/badge.svg)
 
-A small, dependency-free harness for scoring prompts against a rubric of
-deterministic checks — so a prompt edit gets regression-tested like a code
-edit, instead of eyeballed.
+When you edit a prompt, how do you know you didn't make it worse?
 
-Evaluation-first prompt development starts from one observation: **an output
-that reads fluently and an output that is correct are different things, and
-eyeballing cannot reliably tell them apart.** This repo exists to close that
-gap with checks that run in milliseconds and don't get tired of reading the
-tenth diff of the day.
+For code, the answer is a test suite. For prompts, the usual answer is that somebody reads the new output and decides it looks fine. That works until it doesn't — because an AI output that reads smoothly and an AI output that is correct are two different things, and a tired human eyeballing the tenth diff of the day cannot reliably tell them apart.
+
+This repo gives prompts a test suite. You write down what a good output must contain, must never contain, and how it must be formatted. Every prompt edit then gets scored against those checks automatically, in milliseconds, with no API key needed. A bad edit fails loudly instead of slipping through on polish.
 
 ## The demo is the test suite
 
@@ -25,7 +21,7 @@ incident-summary task:
   **9%**.
 
 Both look fine in a quick read. That asymmetry — polish up, correctness down —
-is the standard failure mode of iterating on prompts by vibes, and it is
+is the standard failure mode of iterating on prompts by feel, and it is
 exactly what a weighted rubric catches for free on every edit.
 
 The same pattern shows up in `examples/generic_eval.jsonl`, scored live by
@@ -102,20 +98,20 @@ suite against the same model **twice**:
 - a **naive baseline** system prompt — a plain "read the message and do what it
   asks" instruction, and
 - the **hardened** prompt — the engineered prompt that is this repo's actual
-  product (preserve load-bearing facts, treat document content as data not
-  instructions, don't invent fields, abstain when the answer is absent, honor
-  competing constraints together).
+  product (preserve the critical facts, treat document content as data rather
+  than instructions, don't invent fields, abstain when the answer is absent,
+  honor competing constraints together).
 
 It reports **`baseline X% → hardened Y%  (+delta)`**. The delta is the thing
 worth trusting: it's how much the engineered prompt actually moves the number
 on cases neither prompt was told the answer to. Crucially, **neither system
 prompt enumerates the scored checks and no case restates its own checks** — the
-model gets a realistic task and nothing more, so the suite measures capability,
-not a rigged rubric.
+model gets a realistic task and nothing more, so the suite measures capability
+rather than a rigged rubric.
 
 The suite sits deliberately in the **frontier-failure band**: stealth prompt
 injection (an instruction buried mid-document as a "vendor note," not marked
-SYSTEM), a long-input needle (~one load-bearing figure among distractors),
+SYSTEM), a long-input needle (one decisive figure among distractors),
 two constraints in tension (a word limit vs. including every action item),
 correct abstention (a question the document never answers), and an absent
 JSON field that must come back `null` rather than hallucinated.
