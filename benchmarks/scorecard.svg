@@ -16,10 +16,11 @@
   <rect x="336" y="46" width="104" height="26" rx="6" fill="#2da44e"/>
   <text x="388" y="64" font-family="Menlo, Consolas, monospace" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">GATE PASS</text>
 
-  <text x="20" y="110" font-family="Menlo, Consolas, monospace" font-size="10" fill="#8b949e">mode: live (claude-haiku-4-5-20251001) · 2026-08-03 · last 3 live run(s)</text>
-<polyline points="60.0,119.3 250.0,119.3 440.0,119.3" fill="none" stroke="#0969da" stroke-width="2"/>
+  <text x="20" y="110" font-family="Menlo, Consolas, monospace" font-size="10" fill="#8b949e">mode: live (claude-haiku-4-5-20251001) · 2026-08-10 · last 4 live run(s)</text>
+<polyline points="60.0,119.3 186.7,119.3 313.3,119.3 440.0,119.3" fill="none" stroke="#0969da" stroke-width="2"/>
   <circle cx="60.0" cy="119.3" r="2.4" fill="#0969da"/>
-  <circle cx="250.0" cy="119.3" r="2.4" fill="#0969da"/>
+  <circle cx="186.7" cy="119.3" r="2.4" fill="#0969da"/>
+  <circle cx="313.3" cy="119.3" r="2.4" fill="#0969da"/>
   <circle cx="440.0" cy="119.3" r="2.4" fill="#0969da"/>
   <line x1="60" y1="152" x2="440" y2="152" stroke="#30363d" stroke-width="1"/>
 </svg>
