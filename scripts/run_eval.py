@@ -214,12 +214,15 @@ def make_live_target():
     client = anthropic.Anthropic()
 
     def live_target(prompt: str, case_input: str) -> str:
+        # SDK 1.0 dropped temperature= from Messages.create (weekly eval
+        # 2026-08-24). extra_body still ships T=0 on the wire for models
+        # that honor it; 0.x Stainless clients accept extra_body too.
         resp = client.messages.create(
             model=MODEL_ID,
             max_tokens=400,
-            temperature=0,
             system=prompt,
             messages=[{"role": "user", "content": case_input}],
+            extra_body={"temperature": 0},
         )
         return "".join(
             block.text for block in resp.content if getattr(block, "type", None) == "text"

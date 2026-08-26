@@ -23,7 +23,11 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies (anthropic SDK for the live path)
-        run: pip install anthropic
+        # Cap the major. Unpinned `pip install anthropic` pulled 1.0.0 on
+        # 2026-08-24 and broke messages.create(temperature=...). live_target
+        # is 1.0-compatible; the cap is so a future 2.x cannot surprise the
+        # weekly measurement the same way.
+        run: pip install 'anthropic>=0.122,<2'
 
       - name: Require ANTHROPIC_API_KEY (fail loud, never downgrade to mock)
         env:
