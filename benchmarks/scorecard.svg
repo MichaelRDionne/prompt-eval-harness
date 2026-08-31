@@ -7,22 +7,23 @@
 
   <text x="108" y="66" font-family="Menlo, Consolas, monospace" font-size="18" fill="#8b949e">→</text>
 
-  <text x="138" y="66" font-family="Menlo, Consolas, monospace" font-size="26" font-weight="bold" fill="#e6edf3">96%</text>
+  <text x="138" y="66" font-family="Menlo, Consolas, monospace" font-size="26" font-weight="bold" fill="#e6edf3">100%</text>
   <text x="138" y="84" font-family="Menlo, Consolas, monospace" font-size="10" fill="#8b949e">hardened prompt</text>
 
   <rect x="238" y="46" width="86" height="26" rx="6" fill="#1f6feb"/>
-  <text x="281" y="64" font-family="Menlo, Consolas, monospace" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">+12 pts</text>
+  <text x="281" y="64" font-family="Menlo, Consolas, monospace" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">+15 pts</text>
 
   <rect x="336" y="46" width="104" height="26" rx="6" fill="#2da44e"/>
   <text x="388" y="64" font-family="Menlo, Consolas, monospace" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">GATE PASS</text>
 
-  <text x="20" y="110" font-family="Menlo, Consolas, monospace" font-size="10" fill="#8b949e">mode: live (claude-haiku-4-5-20251001) · 2026-08-26 · last 6 live run(s)</text>
-<polyline points="60.0,119.3 136.0,119.3 212.0,119.3 288.0,119.3 364.0,119.3 440.0,119.3" fill="none" stroke="#0969da" stroke-width="2"/>
+  <text x="20" y="110" font-family="Menlo, Consolas, monospace" font-size="10" fill="#8b949e">mode: live (claude-haiku-4-5-20251001) · 2026-08-31 · last 7 live run(s)</text>
+<polyline points="60.0,119.3 123.3,119.3 186.7,119.3 250.0,119.3 313.3,119.3 376.7,119.3 440.0,118.0" fill="none" stroke="#0969da" stroke-width="2"/>
   <circle cx="60.0" cy="119.3" r="2.4" fill="#0969da"/>
-  <circle cx="136.0" cy="119.3" r="2.4" fill="#0969da"/>
-  <circle cx="212.0" cy="119.3" r="2.4" fill="#0969da"/>
-  <circle cx="288.0" cy="119.3" r="2.4" fill="#0969da"/>
-  <circle cx="364.0" cy="119.3" r="2.4" fill="#0969da"/>
-  <circle cx="440.0" cy="119.3" r="2.4" fill="#0969da"/>
+  <circle cx="123.3" cy="119.3" r="2.4" fill="#0969da"/>
+  <circle cx="186.7" cy="119.3" r="2.4" fill="#0969da"/>
+  <circle cx="250.0" cy="119.3" r="2.4" fill="#0969da"/>
+  <circle cx="313.3" cy="119.3" r="2.4" fill="#0969da"/>
+  <circle cx="376.7" cy="119.3" r="2.4" fill="#0969da"/>
+  <circle cx="440.0" cy="118.0" r="2.4" fill="#0969da"/>
   <line x1="60" y1="152" x2="440" y2="152" stroke="#30363d" stroke-width="1"/>
 </svg>
