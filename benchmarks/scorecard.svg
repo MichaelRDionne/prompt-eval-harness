@@ -16,15 +16,16 @@
   <rect x="336" y="46" width="104" height="26" rx="6" fill="#2da44e"/>
   <text x="388" y="64" font-family="Menlo, Consolas, monospace" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">GATE PASS</text>
 
-  <text x="20" y="110" font-family="Menlo, Consolas, monospace" font-size="10" fill="#8b949e">mode: live (claude-haiku-4-5-20251001) · 2026-09-07 · last 8 live run(s)</text>
-<polyline points="60.0,119.3 114.3,119.3 168.6,119.3 222.9,119.3 277.1,119.3 331.4,119.3 385.7,118.0 440.0,119.3" fill="none" stroke="#0969da" stroke-width="2"/>
+  <text x="20" y="110" font-family="Menlo, Consolas, monospace" font-size="10" fill="#8b949e">mode: live (claude-haiku-4-5-20251001) · 2026-09-14 · last 9 live run(s)</text>
+<polyline points="60.0,119.3 107.5,119.3 155.0,119.3 202.5,119.3 250.0,119.3 297.5,119.3 345.0,118.0 392.5,119.3 440.0,119.3" fill="none" stroke="#0969da" stroke-width="2"/>
   <circle cx="60.0" cy="119.3" r="2.4" fill="#0969da"/>
-  <circle cx="114.3" cy="119.3" r="2.4" fill="#0969da"/>
-  <circle cx="168.6" cy="119.3" r="2.4" fill="#0969da"/>
-  <circle cx="222.9" cy="119.3" r="2.4" fill="#0969da"/>
-  <circle cx="277.1" cy="119.3" r="2.4" fill="#0969da"/>
-  <circle cx="331.4" cy="119.3" r="2.4" fill="#0969da"/>
-  <circle cx="385.7" cy="118.0" r="2.4" fill="#0969da"/>
+  <circle cx="107.5" cy="119.3" r="2.4" fill="#0969da"/>
+  <circle cx="155.0" cy="119.3" r="2.4" fill="#0969da"/>
+  <circle cx="202.5" cy="119.3" r="2.4" fill="#0969da"/>
+  <circle cx="250.0" cy="119.3" r="2.4" fill="#0969da"/>
+  <circle cx="297.5" cy="119.3" r="2.4" fill="#0969da"/>
+  <circle cx="345.0" cy="118.0" r="2.4" fill="#0969da"/>
+  <circle cx="392.5" cy="119.3" r="2.4" fill="#0969da"/>
   <circle cx="440.0" cy="119.3" r="2.4" fill="#0969da"/>
   <line x1="60" y1="152" x2="440" y2="152" stroke="#30363d" stroke-width="1"/>
 </svg>
