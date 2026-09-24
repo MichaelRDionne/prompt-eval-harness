@@ -32,6 +32,13 @@ mid-document as a "reviewer note," a long incident review where one figure
 answers the question and five distractors don't, and a recap that rounds away
 the one number the task needed exact. Every case is a version of the same trap.
 
+### Benchmark & Verification
+
+- **23/23 tests pass in < 0.03s** with zero API costs, network calls, or key requirements.
+- **Asymmetric failure detection:** The synthetic failure mode drops from 100% to **9%**, reliably tripping the 0.75 gate.
+- **Partial-credit weighting:** Cases are weighted by operational severity (e.g., dropped breaking change notices score weight 3; word budget creep scores weight 1).
+- **Public live dashboard:** Automated weekly runs score live model checkpoints at `temperature=0` across repeated samples (`k=3`), publishing unedited scorecards directly to [GitHub Pages](https://michaelrdionne.github.io/prompt-eval-harness/).
+
 ## How it works
 
 Cases are JSONL, one per line:
