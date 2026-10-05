@@ -2,7 +2,7 @@
   <rect x="0.5" y="0.5" width="459" height="169" rx="10" fill="#0d1117" stroke="#30363d"/>
   <text x="20" y="28" font-family="Menlo, Consolas, monospace" font-size="13" fill="#8b949e">prompt-eval-harness · baseline vs hardened · generic_eval</text>
 
-  <text x="20" y="66" font-family="Menlo, Consolas, monospace" font-size="22" font-weight="bold" fill="#8b949e">85%</text>
+  <text x="20" y="66" font-family="Menlo, Consolas, monospace" font-size="22" font-weight="bold" fill="#8b949e">87%</text>
   <text x="20" y="84" font-family="Menlo, Consolas, monospace" font-size="10" fill="#8b949e">baseline prompt</text>
 
   <text x="108" y="66" font-family="Menlo, Consolas, monospace" font-size="18" fill="#8b949e">→</text>
@@ -11,23 +11,24 @@
   <text x="138" y="84" font-family="Menlo, Consolas, monospace" font-size="10" fill="#8b949e">hardened prompt</text>
 
   <rect x="238" y="46" width="86" height="26" rx="6" fill="#1f6feb"/>
-  <text x="281" y="64" font-family="Menlo, Consolas, monospace" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">+12 pts</text>
+  <text x="281" y="64" font-family="Menlo, Consolas, monospace" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">+10 pts</text>
 
   <rect x="336" y="46" width="104" height="26" rx="6" fill="#2da44e"/>
   <text x="388" y="64" font-family="Menlo, Consolas, monospace" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">GATE PASS</text>
 
-  <text x="20" y="110" font-family="Menlo, Consolas, monospace" font-size="10" fill="#8b949e">mode: live (claude-haiku-4-5-20251001) · 2026-09-28 · last 11 live run(s)</text>
-<polyline points="60.0,119.3 98.0,119.3 136.0,119.3 174.0,119.3 212.0,119.3 250.0,119.3 288.0,118.0 326.0,119.3 364.0,119.3 402.0,119.3 440.0,119.3" fill="none" stroke="#0969da" stroke-width="2"/>
+  <text x="20" y="110" font-family="Menlo, Consolas, monospace" font-size="10" fill="#8b949e">mode: live (claude-haiku-4-5-20251001) · 2026-10-05 · last 12 live run(s)</text>
+<polyline points="60.0,119.3 94.5,119.3 129.1,119.3 163.6,119.3 198.2,119.3 232.7,119.3 267.3,118.0 301.8,119.3 336.4,119.3 370.9,119.3 405.5,119.3 440.0,119.3" fill="none" stroke="#0969da" stroke-width="2"/>
   <circle cx="60.0" cy="119.3" r="2.4" fill="#0969da"/>
-  <circle cx="98.0" cy="119.3" r="2.4" fill="#0969da"/>
-  <circle cx="136.0" cy="119.3" r="2.4" fill="#0969da"/>
-  <circle cx="174.0" cy="119.3" r="2.4" fill="#0969da"/>
-  <circle cx="212.0" cy="119.3" r="2.4" fill="#0969da"/>
-  <circle cx="250.0" cy="119.3" r="2.4" fill="#0969da"/>
-  <circle cx="288.0" cy="118.0" r="2.4" fill="#0969da"/>
-  <circle cx="326.0" cy="119.3" r="2.4" fill="#0969da"/>
-  <circle cx="364.0" cy="119.3" r="2.4" fill="#0969da"/>
-  <circle cx="402.0" cy="119.3" r="2.4" fill="#0969da"/>
+  <circle cx="94.5" cy="119.3" r="2.4" fill="#0969da"/>
+  <circle cx="129.1" cy="119.3" r="2.4" fill="#0969da"/>
+  <circle cx="163.6" cy="119.3" r="2.4" fill="#0969da"/>
+  <circle cx="198.2" cy="119.3" r="2.4" fill="#0969da"/>
+  <circle cx="232.7" cy="119.3" r="2.4" fill="#0969da"/>
+  <circle cx="267.3" cy="118.0" r="2.4" fill="#0969da"/>
+  <circle cx="301.8" cy="119.3" r="2.4" fill="#0969da"/>
+  <circle cx="336.4" cy="119.3" r="2.4" fill="#0969da"/>
+  <circle cx="370.9" cy="119.3" r="2.4" fill="#0969da"/>
+  <circle cx="405.5" cy="119.3" r="2.4" fill="#0969da"/>
   <circle cx="440.0" cy="119.3" r="2.4" fill="#0969da"/>
   <line x1="60" y1="152" x2="440" y2="152" stroke="#30363d" stroke-width="1"/>
 </svg>
